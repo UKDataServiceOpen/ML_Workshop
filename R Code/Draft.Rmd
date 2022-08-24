@@ -4,15 +4,16 @@ output: html_document
 date: "2022-08-17"
 ---
 
-## Install Packages
+## Install and  Packages
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE}
 
 #install.packages("factoextra")
 #install.packages("stats")
 #install.packages("janitor")
 #install.packages("ClusterR")
 #install.packages("cluster")
+#install.packages("tidyverse")
   
 # Loading package
 library(ClusterR)
@@ -27,7 +28,32 @@ library(cluster)
 ```
 
 
-## USA Arrests DataSet (R DataSet)
+
+Clustering:
+
+Clustering is a technique in machine learning that attempts to find clusters of observations within a dataset.
+
+The goal is to find clusters such that the observations within each cluster are quite similar to each other, while observations in different clusters are quite different from each other.
+
+Clustering is a form of unsupervised learning because we’re simply attempting to find structure within a dataset rather than predicting the value of some response variable.
+
+K - Means: 
+
+K-means clustering is a technique in which we place each observation in a dataset into one of K clusters.
+
+The end goal is to have K clusters in which the observations within each cluster are quite similar to each other while the observations in different clusters are quite different from each other.
+
+1. Choose a value for K
+2. Randomly assign each observation to an inital cluster, from 1 to K
+3. Compute the cluster centroid (vector of the P feature means for the observation in the Kth cluster)
+
+
+We are going to explore two synthetic datasets
+- 1) USArrests (R Dataset)
+- 2) Wholesale customer data (UCI ML repository)
+
+
+## 1 - USA Arrests DataSet (R DataSet)
 
 ```{r}
 #read in data 
@@ -51,8 +77,8 @@ k2
 #If there are more than two dimensions (variables) fviz_cluster will perform principal component analysis (PCA) and plot the data points according to the first two principal components that explain the majority of the variance.
 
 #visualise 
-fviz_cluster(k2, data = df)
-
+a <- fviz_cluster(k2, data = df)
+a
 
 #Or you could use standard pairwise scatter plots 
 df %>%
@@ -65,15 +91,83 @@ df %>%
 
 
 
-## Customer Data 
 
-The data set refers to clients of a wholesale distributor. It includes the annual spending in monetary units (m.u.) on diverse product categories
 
-```{r}
+
+## 2 - Customer Data 
+
+Now that we've covered the basics of the k-mean algorithim using the open R Dataset, lets explore some real-world data!
+
+The data set refers to clients of a wholesale distributor. It includes the annual spending in monetary units (m.u.) on diverse product categories. It includes the annual spendingon a range of product categories. Let's see if we can use k-means clustering to segment/group these customers based on their spending habits.
+
+```{r read in the data }
 #read in data
 customer <- read.csv("Wholesale customers data.csv") %>% clean_names()
+```
 
-# Fitting k-means clustering model
+Lets briefly explore the datatset
+
+```{r explore the dataset }
+head(customer)
+```
+
+
+### Data Pre-Processing 
+
+*Information about the variables*
+
+Nominal:
+
+- Channel: HORECA i.e. hotel/reseaturant/cafe (1) or Retail Channel (2)
+- Region: Linson (1), Oporto (2) or Other (3)
+
+Continous 
+- the remaining variables are continuos and represent the annual spenaing (in monitary units) of each diverse product categories
+
+
+//// 
+
+Let's have a closer look at our variables to see if we need to perform any pre-processing. It's clear that the variables 'Channel' and 'Region' have been label encoded (each value has been converted into a number), therefore the variance for these variables will be extremely low compared to the product variables.
+
+
+### Descriptive Analysis 
+
+```{r}
+#Use summary() function to run descriptive analysis
+summary(customer)
+
+#Use ftable() function on categorical variables
+table(customer$channel)
+table(customer$region)
+```
+
+When it comes to performing clustering on a given datset, you must think carefully about feature variables. 
+
+Our product variables have different ranges of monitory units i.e. milk ranges from $3 - £112151 whereas frozen ranges from £25 - £60869. We must change the values of these numeric columns in the dataset to ensure that they use a common scale i.e. we standarise/normaise the data . In manchine learning this is referred to as 'feature scalling'. 
+
+This is important for clustering given uses distanced-based algorithm. 
+
+Because k-means uses the Euclidean distance to calculate the distance between data points and the centroids, we need to ensure that the distance measure accords equal weight to each variable. We don't want to put more weight on variables that might have higher variance.
+
+To standardise a dataset we can use
+
+
+### Standarise the Data
+
+```{r}
+customer <- scale(customer)
+head(customer)
+```
+
+
+
+
+### Fitting k-means clustering model
+
+We can compute k-means in R with the kmeans function. Here will group the data into two clusters (centers = 3). The kmeans function also has an nstart option that attempts multiple initial configurations and reports on the best one. For example, adding nstart = 20 will generate 20 initial configurations. This approach is often recommended.
+
+
+```{r}
 set.seed(240) # Setting seed
 kmeans.re <- kmeans(customer, centers = 3, nstart = 20)
 kmeans.re
@@ -82,38 +176,50 @@ kmeans.re
 kmeans.re$cluster
   
 # Confusion Matrix
-cm <- table(customer$region, kmeans.re$cluster)
-cm
-  
-# Model Evaluation and visualization
-plot(customer[c("grocery", "frozen")])
-plot(customer[c("grocery", "frozen")], 
-     col = kmeans.re$cluster)
-plot(customer[c("grocery", "frozen")], 
-     col = kmeans.re$cluster, 
-     main = "K-means with 3 clusters")
-  
-## Plotiing cluster centers
-kmeans.re$centers
-kmeans.re$centers[, c("grocery", "frozen")]
-  
-# cex is font size, pch is symbol
-points(kmeans.re$centers[, c("grocery", "frozen")], 
-       col = 1:3, pch = 8, cex = 3) 
-  
-## Visualizing clusters
-y_kmeans <- kmeans.re$cluster
-clusplot(customer[, c("grocery", "frozen")],
-         y_kmeans,
-         lines = 0,
-         shade = TRUE,
-         color = TRUE,
-         labels = 2,
-         plotchar = FALSE,
-         span = TRUE,
-         main = paste("Cluster iris"),
-         xlab = 'grocery',
-         ylab = 'frozen')
+#cm <- table(customer$region, kmeans.re$cluster)
+#cm
+```
+
+
+If we print the results we'll see our groupings results in 3 clusters sizes of 130, 14, 296. We also get the means for the 3 groups across the variables, and the cluster assugnment for each observation
+
+
+
+### Visualusisation 
+
+```{r}
+fviz_cluster(kmeans.re, data = customer)
+```
+
+
+
+
+### Evaluation: the elbow method
+
+As we can see the lowest SSE produced from the algorithm runs, is quite high. This suggests that our current kmeans model is not a good fit for the data. We want to reduce this inertia value considerably. The inertia value is sensitive to the number of clusters that we use when running the algorithm. Therefore, to help find the optimum number of clusters, let's use the aforementioned elbow method.
+
+```{r}
+#Elbow Method for finding the optimal number of clusters
+
+#Step by Step 
+set.seed(123)
+
+# Compute and plot wss for k = 2 to k = 15.
+k.max <- 15
+
+wss <- sapply(1:k.max, 
+              function(k){kmeans(customer, k, nstart=50,iter.max = 15 )$tot.withinss})
+wss
+plot(1:k.max, wss,
+     type="b", pch = 19, frame = FALSE, 
+     xlab="Number of clusters K",
+     ylab="Total within-clusters sum of squares")
+
+
+#Using fviz_nbclust
+set.seed(123)
+
+fviz_nbclust(customer, kmeans, method ="wss")
 
 ```
 
@@ -121,6 +227,74 @@ clusplot(customer[, c("grocery", "frozen")],
 
 
 
+### Extra Activities: PCA on the customer dataset
+
+If there are more than two dimensions (variables) fviz_cluster will perform principal component analysis (PCA) and plot the data points according to the first two principal components that explain the majority of the variance.
+
+
+```{r}
+#calculate principal components
+results <- prcomp(customer, scale = TRUE)
+
+#reverse the signs
+results$rotation <- -1*results$rotation
+
+#display principal components
+results$rotation
+
+#reverse the signs of the scores
+results$x <- -1*results$x
+
+#display the first six scores
+head(results$x)
+```
+
+
+### Visualise 
+
+```{r}
+biplot(results, scale = 0)
+```
+
+
+
+
+
+## Extra Activities: Looking at just frozen vs grocery 
+
+```{r}
+# #### Model Evaluation and visualization
+# 
+# plot(customer[c("grocery", "frozen")])
+# plot(customer[c("grocery", "frozen")], 
+#      col = kmeans.re$cluster)
+# plot(customer[c("grocery", "frozen")], 
+#      col = kmeans.re$cluster, 
+#      main = "K-means with 3 clusters")
+#   
+# ## Plotiing cluster centers
+# kmeans.re$centers
+# kmeans.re$centers[, c("grocery", "frozen")]
+#   
+# # cex is font size, pch is symbol
+# points(kmeans.re$centers[, c("grocery", "frozen")], 
+#        col = 1:3, pch = 8, cex = 3) 
+#   
+# ## Visualizing clusters
+# y_kmeans <- kmeans.re$cluster
+# clusplot(customer[, c("grocery", "frozen")],
+#          y_kmeans,
+#          lines = 0,
+#          shade = TRUE,
+#          color = TRUE,
+#          labels = 2,
+#          plotchar = FALSE,
+#          span = TRUE,
+#          main = paste("Cluster"),
+#          xlab = 'grocery',
+#          ylab = 'frozen')
+
+```
 
 
 
