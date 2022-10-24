@@ -6,7 +6,7 @@ date: "2022-08-17"
 
 ## Install  Packages
 
-```{r setup, include=FALSE, echo=TRUE}
+```{r setup, include=TRUE, echo=TRUE}
 
 #install.packages("factoextra")
 #install.packages("stats")
@@ -27,7 +27,8 @@ date: "2022-08-17"
 
 library(dkUtils) # find it at https://github.com/dataknut/dkUtils
 
-myLibs <- c("factoextra", "stats", "janitor", "ClusterR", "cluster", "tidyverse")
+myLibs <- c("factoextra", "stats", "janitor", "ClusterR", "cluster", "tidyverse",
+            "ggplot2")
 dkUtils::loadLibraries(myLibs) # magic
 ```
 
@@ -61,37 +62,38 @@ We are going to explore two synthetic datasets
 
 ## 1 - USA Arrests DataSet (R DataSet)
 
-```{r}
+```{r kMeansExampleArrests}
 #read in data 
 df <- USArrests %>% na.omit(df)
 
 ## Scaling and standardising 
-df <- scale(df)
+head(df)
+df <- scale(df) # centres & standardises data etc - requires numeric-only columns, states are row names
 head(df)
 
 #compute distance matrix
-distance <- get_dist(df)
-fviz_dist(distance, gradient = list(low = "#00AFBB", mid = "white", high = "#FC4E07"))
+distance <- factoextra::get_dist(df)
+factoextra::fviz_dist(distance, gradient = list(low = "#00AFBB", mid = "white", high = "#FC4E07"))
 
 
 ## K-Means clustering 
 
-k2 <- kmeans(df, centers = 2, nstart = 25)
+k2 <- stats::kmeans(df, centers = 2, nstart = 25)
 str(k2)
 k2
 
-#If there are more than two dimensions (variables) fviz_cluster will perform principal component analysis (PCA) and plot the data points according to the first two principal components that explain the majority of the variance.
+#If there are more than two dimensions (variables) factoextra::fviz_cluster will perform principal component analysis (PCA) and plot the data points according to the first two principal components that explain the majority of the variance.
 
 #visualise 
-a <- fviz_cluster(k2, data = df)
+a <- factoextra::fviz_cluster(k2, data = df)
 a
 
 #Or you could use standard pairwise scatter plots 
 df %>%
-  as_tibble() %>%
-  mutate(cluster = k2$cluster,
+  dplyr::as_tibble() %>%
+  dplyr::mutate(cluster = k2$cluster,
          state = row.names(USArrests)) %>%
-  ggplot(aes(UrbanPop, Murder, color = factor(cluster), label = state)) +
+  ggplot2::ggplot(aes(UrbanPop, Murder, color = factor(cluster), label = state)) +
   geom_text()
 ```
 
@@ -138,7 +140,7 @@ Let's have a closer look at our variables to see if we need to perform any pre-p
 
 ### Descriptive Analysis 
 
-```{r}
+```{r descriptivesCD}
 #Use summary() function to run descriptive analysis
 summary(customer)
 
@@ -160,8 +162,8 @@ To standardise a dataset we can use
 
 ### Standarise the Data
 
-```{r}
-customer <- scale(customer)
+```{r standardiseCD}
+customer <- scale(customer) # centres data
 head(customer)
 ```
 
@@ -173,9 +175,9 @@ head(customer)
 We can compute k-means in R with the kmeans function. Here will group the data into two clusters (centers = 3). The kmeans function also has an nstart option that attempts multiple initial configurations and reports on the best one. For example, adding nstart = 20 will generate 20 initial configurations. This approach is often recommended.
 
 
-```{r}
+```{r kmeansCD}
 set.seed(240) # Setting seed
-kmeans.re <- kmeans(customer, centers = 3, nstart = 20)
+kmeans.re <- stats::kmeans(customer, centers = 3, nstart = 20)
 kmeans.re
 
 #cluster identification?
@@ -193,8 +195,8 @@ If we print the results we'll see our groupings results in 3 clusters sizes of 1
 
 ### Visualusisation 
 
-```{r}
-fviz_cluster(kmeans.re, data = customer)
+```{r kmeansVisCD}
+factoextra::fviz_cluster(kmeans.re, data = customer)
 ```
 
 
@@ -204,7 +206,7 @@ fviz_cluster(kmeans.re, data = customer)
 
 As we can see the lowest SSE produced from the algorithm runs, is quite high. This suggests that our current kmeans model is not a good fit for the data. We want to reduce this inertia value considerably. The inertia value is sensitive to the number of clusters that we use when running the algorithm. Therefore, to help find the optimum number of clusters, let's use the aforementioned elbow method.
 
-```{r}
+```{r evalnClustersCD}
 #Elbow Method for finding the optimal number of clusters
 
 #Step by Step 
@@ -225,7 +227,7 @@ plot(1:k.max, wss,
 #Using fviz_nbclust
 set.seed(123)
 
-fviz_nbclust(customer, kmeans, method ="wss")
+factoextra::fviz_nbclust(customer, kmeans, method ="wss")
 
 ```
 
@@ -235,12 +237,12 @@ fviz_nbclust(customer, kmeans, method ="wss")
 
 ### Extra Activities: PCA on the customer dataset
 
-If there are more than two dimensions (variables) fviz_cluster will perform principal component analysis (PCA) and plot the data points according to the first two principal components that explain the majority of the variance.
+If there are more than two dimensions (variables) factoextra::fviz_cluster will perform principal component analysis (PCA) and plot the data points according to the first two principal components that explain the majority of the variance.
 
 
-```{r}
+```{r extraCD}
 #calculate principal components
-results <- prcomp(customer, scale = TRUE)
+results <- stats::prcomp(customer, scale = TRUE)
 
 #reverse the signs
 results$rotation <- -1*results$rotation
@@ -308,7 +310,7 @@ biplot(results, scale = 0)
 # The end
 
 ```{r}
-run to here
+#run to here
 ```
 
 
