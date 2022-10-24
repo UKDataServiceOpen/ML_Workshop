@@ -4,9 +4,9 @@ output: html_document
 date: "2022-08-17"
 ---
 
-## Install and  Packages
+## Install  Packages
 
-```{r setup, include=FALSE, echo=FALSE}
+```{r setup, include=FALSE, echo=TRUE}
 
 #install.packages("factoextra")
 #install.packages("stats")
@@ -14,20 +14,25 @@ date: "2022-08-17"
 #install.packages("ClusterR")
 #install.packages("cluster")
 #install.packages("tidyverse")
-  
-# Loading package
-library(ClusterR)
-library(cluster)
-library(factoextra)
-library(stats)
-library(janitor)
-library(dplyr)
-library(tidyverse)  
-library(cluster)
 
+# Loading package
+# library(ClusterR)
+# library(cluster)
+# library(factoextra)
+# library(stats)
+# library(janitor)
+# library(dplyr)
+# library(tidyverse)  
+# library(cluster)
+
+library(dkUtils) # find it at https://github.com/dataknut/dkUtils
+
+myLibs <- c("factoextra", "stats", "janitor", "ClusterR", "cluster", "tidyverse")
+dkUtils::loadLibraries(myLibs) # magic
 ```
 
 
+# Introduction
 
 Clustering:
 
@@ -52,6 +57,7 @@ We are going to explore two synthetic datasets
 - 1) USArrests (R Dataset)
 - 2) Wholesale customer data (UCI ML repository)
 
+# Case Studies
 
 ## 1 - USA Arrests DataSet (R DataSet)
 
@@ -299,6 +305,11 @@ biplot(results, scale = 0)
 
 
 
+# The end
+
+```{r}
+run to here
+```
 
 
 
