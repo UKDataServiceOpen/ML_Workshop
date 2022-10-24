@@ -1,8 +1,18 @@
 ---
-title: "K_means"
-output: html_document
-date: "2022-08-17"
+title: "K_means examples (UKDS workshop)"
+subtitle: "Modified by..."
+author: "Ben Anderson"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+date: "Last run: `r Sys.time()`"
 ---
+
+## Code
+
+  * Original code & contributors: https://github.com/UKDataServiceOpen/ML_Workshop
+  * This fork: https://github.com/dataknut/ML_Workshop
 
 ## Install  Packages
 
