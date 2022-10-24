@@ -4,5 +4,7 @@ fork with some local edits & notes to self
 
 ## Other useful sources:
 
- * https://machinelearningmastery.com/k-fold-cross-validation/
- * https://books.google.co.uk/books?id=iNuSDwAAQBAJ
+(h/t @twrushby)
+
+ * https://machinelearningmastery.com/k-fold-cross-validation/ (using Python)
+ * [Machine Learning with R: Expert techniques for predictive modeling](https://books.google.co.uk/books?id=iNuSDwAAQBAJ)
