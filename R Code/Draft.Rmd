@@ -286,7 +286,7 @@ If there are more than two dimensions (variables) factoextra::fviz_cluster will 
 
 > XX why are we reversing signs etc?
 
-```{r extraCD}
+```{r pcaCD}
 #calculate principal components
 results <- stats::prcomp(customer, scale = TRUE)
 
@@ -316,7 +316,7 @@ plot(results)
 
 "A biplot is plot which aims to represent both the observations and variables of a matrix of multivariate data on the same plot."
 
-```{r}
+```{r visualisePCA}
 stats::biplot(results, scale = 0)
 ```
 
@@ -326,7 +326,7 @@ stats::biplot(results, scale = 0)
 
 ## Extra Activities: Looking at just frozen vs grocery 
 
-```{r}
+```{r extraCD}
 # #### Model Evaluation and visualization
 # 
 # plot(customer[c("grocery", "frozen")])
@@ -365,8 +365,9 @@ stats::biplot(results, scale = 0)
 
 # The end
 
-```{r}
-#run to here
+> How is this 'machine learning'? Just feels like fairly standard cluster analysis.
+
+```{r runToHere}
 ```
 
 
