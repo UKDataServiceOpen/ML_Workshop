@@ -1,7 +1,1 @@
-## Enable Table of Contents
-
-
-jupyter contrib nbextension install --user
-jupyter nbextension enable --py widgetsnbextension
-jupyter nbextension enable rise
-jupyter nbextension enable toc2/main
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/UKDataServiceOpen/ML_Workshop/HEAD)
