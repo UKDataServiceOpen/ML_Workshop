@@ -20,4 +20,4 @@ The following topics are covered under this training series:
 
 The training materials - including webinar recordings, slides, and sample Python code - can be found in the following folders:
 * [Python code](./Python_Code) - run and/or download the Python code using our Jupyter notebook resources.
-* [R code](./R\ Material) - run and/or download the R code using our Jupyter notebook resources.
+* [R code](./R_Material) - run and/or download the R code using our Jupyter notebook resources.
