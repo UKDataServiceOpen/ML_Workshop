@@ -1,6 +1,6 @@
-![UKDS Logo](./Python_Code/images/ukds.png)<br>
+![ukds](./Python_Code/Images/ukds.png)<br>
 <br>
-# Text-mining for Social Science Research
+
 
 # ML-Workshop
 
