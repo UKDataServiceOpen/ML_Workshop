@@ -33,7 +33,7 @@ The end goal is to have K clusters in which the observations within each cluster
 #install.packages("ClusterR")
 #install.packages("cluster")
 #install.packages("tidyverse")
-#install.packages("dplyr)
+#install.packages("dplyr")
   
 # Loading package
 library(ClusterR)
@@ -55,9 +55,12 @@ We are going to explore datasets
 
 ## 1 - USA Arrests DataSet (R DataSet)
 
+Lets explore the dataset and run some explanatory analysis 
+
 ```{r}
 #read in data 
 df <- USArrests %>% na.omit(df)
+head(df)
 
 ## Scaling and standardising 
 df <- scale(df)
@@ -66,10 +69,13 @@ head(df)
 #compute distance matrix
 distance <- get_dist(df)
 fviz_dist(distance, gradient = list(low = "#00AFBB", mid = "white", high = "#FC4E07"))
+```
 
 
+
+
+```{r}
 ## K-Means clustering 
-
 k2 <- kmeans(df, centers = 2, nstart = 25)
 str(k2)
 k2
@@ -88,6 +94,7 @@ df %>%
   ggplot(aes(UrbanPop, Murder, color = factor(cluster), label = state)) +
   geom_text()
 ```
+
 
 
 
@@ -149,11 +156,6 @@ for (i in 1:10){
 plot(1:10, tot.withinss, type="b", pch=19)
 
 ```
-
-
-
-
-
 
 
 
