@@ -1,7 +1,7 @@
 ---
 title: "K_means examples (UKDS workshop)"
-subtitle: "Modified by..."
-author: "Ben Anderson"
+subtitle: ""
+author: "Nadia Kennar, UKDS, modified by Ben Anderson"
 output:
   html_document:
     toc: true
@@ -114,15 +114,7 @@ df %>%
 
 >If there are more than two dimensions (variables) factoextra::fviz_cluster will perform principal component analysis (PCA) and plot the data points (and the clusters) according to the first two principal components that explain the majority of the variance.
 
-## 2 - Customer Data 
-=======
-title: "Extra Activity"
-output: html_document
-date: "2022-10-27"
-author: Nadia Kennar, UKDS
----
-
->>>>>>> a1be4af9b362217e12723b2e136fb435c1f75384:R_Material/Extra Activity.Rmd
+2 - Customer Data 
 
 Now that we've covered the basics of the k-mean algorithm using the open R Dataset, lets explore some real-world data!
 
