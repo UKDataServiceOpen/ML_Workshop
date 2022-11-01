@@ -72,7 +72,7 @@ We are going to explore two synthetic datasets
 
 ## 1 - USA Arrests DataSet (R DataSet)
 
-> XX why nstart = 25?
+> XX why nstart = 25? See notes in [K_Means.Rmd](K_Means.Rmd)
 > X why centres = 2? Do we suspect 2 clusters... or...what?
 
 ```{r kMeansExampleArrests}
@@ -281,7 +281,7 @@ factoextra::fviz_cluster(kmeansFinal.re, data = customer)
 ```
 > Hmmmmm
 
-### Extra Activities: PCA on the customer dataset
+### Extra Activities: Principal Component Analysis (PCA) on the customer dataset
 
 If there are more than two dimensions (variables) factoextra::fviz_cluster will perform principal component analysis (PCA) and plot the data points according to the first two principal components that explain the majority of the variance.
 
