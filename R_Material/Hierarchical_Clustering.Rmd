@@ -2,7 +2,7 @@
 title: "Hierarchical_Clustering"
 output: html_document
 date: "2022-11-01"
-author: Nadia Kennar, UKDS
+author: "Nadia Kennar, UKDS , modified by Ben Anderson"
 ---
 
 ## Recap on hierachical clustering 
@@ -77,18 +77,18 @@ is.null(iris)
 We will perform this on just the numeric values, these include sepal length, petal length, sepal width and petal width which can be represented using the code *[, 1;4]* which selects columns 1 - 4. 
 
 
-```{r}
-data <- dist(iris[, 1:4])
-hcluster <- hclust(data)
+```{r runBasicHcluster}
+data <- stats::dist(iris[, 1:4]) # distance matrix , default method = "euclidean"
+hcluster <- stats::hclust(data)
 hcluster
 ```
 
 
 ### Visualise our clusters using a dendogram 
 
-```{r}
+```{r dendogramBasic}
 # Convert hclust into a dendrogram and plot
-hcd <- as.dendrogram(hcluster)
+hcd <- stats::as.dendrogram(hcluster)
 # Define nodePar
 nodePar <- list(lab.cex = 0.6, pch = c(20, 19),
                 cex = 0.7, col = c("green","yellow"))
@@ -103,12 +103,13 @@ plot(hcd,  xlab = "Height", nodePar = nodePar, main = "Cluster dendrogram",
 
 ## Method 2 
 
+> This time remove categorical vars and 
 
-```{r}
+```{r prepDataTwo}
 # Remove the categorical variable 
 iris2 <- iris[,-5]
 
-#store as a seperate dataframe 
+#store as a separate dataframe 
 species <- iris[,5]
 
 #convert to numeric and add a colour palette
@@ -121,8 +122,9 @@ species_col <- rev(rainbow_hcl(3))[as.numeric(species)]
 
 ### Plot a SPLOM (Scatterplot Matrix)
 
+> just to have a look...
 
-```{r}
+```{r pairsPLot}
 # Plot a SPLOM:
 pairs(iris2, col = species_col,
       lower.panel = NULL,
@@ -145,18 +147,23 @@ We can see that the Setosa species are distinctly different from Versicolor and 
 
 The default hierarchical clustering method in hclust is “complete”. We can visualize the result of running it by turning the object to a dendrogram and making several adjustments to the object, such as: changing the labels, coloring the labels based on the real species category, and coloring the branches based on cutting the tree into three clusters.
 
+> try method = "single", method = "complete", method = "average"
 
-```{r}
-d_iris <- dist(iris2) # method="man" # is a bit better
-hc_iris <- hclust(d_iris, method = "complete")
+ * Single works poorly
+ * Complete works OK (probably best)
+ * Average = all pairwise similarities & uses averages as distance
+
+```{r hclustComplex}
+d_iris <- stats::dist(iris2) # method="man" # is a bit better
+hc_iris <- stats::hclust(d_iris, method = "average")
 iris_species <- rev(levels(iris[,5]))
 
-dend <- as.dendrogram(hc_iris)
+dend <- stats::as.dendrogram(hc_iris)
 # order it the closest we can to the order of the observations:
 dend <- rotate(dend, 1:150)
 
 # Color the branches based on the clusters:
-dend <- color_branches(dend, k=3) #, groupLabels=iris_species)
+dend <- dendextend::color_branches(dend, k=3) #, groupLabels=iris_species)
 
 # Manually match the labels, as much as possible, to the real classification of the flowers:
 labels_colors(dend) <-
@@ -171,7 +178,7 @@ labels(dend) <- paste(as.character(iris[,5])[order.dendrogram(dend)],
                            sep = "")
 
 # We hang the dendrogram a bit:
-dend <- hang.dendrogram(dend,hang_height=0.1)
+dend <- dendextend::hang.dendrogram(dend,hang_height=0.1)
 # reduce the size of the labels:
 # dend <- assign_values_to_leaves_nodePar(dend, 0.5, "lab.cex")
 dend <- set(dend, "labels_cex", 0.2)
@@ -187,51 +194,56 @@ These visualizations easily demonstrates how the separation of the hierarchical 
 
 The hanging of the tree also helps to locate extreme observations. For example, we can see that observation “virginica (107)” is not very similar to the Versicolor species, but still, it is among them. Also, “Versicolor (71)” is located too much “within” the group of Virginica flowers.
 
-
-
+> Measures of 'goodness'?
 
 ### Elbow plot method
 
 Similar to how we determined optimal clusters with k-means clustering, we can execute similar approaches for hierarchical clustering:
 
-Elbow Method
-To perform the elbow method we just need to change the second argument in fviz_nbclust to FUN = hcut.
+Elbow Method: To perform the elbow method we just need to change the second argument in fviz_nbclust to FUN = hcut.
 
-```{r}
-fviz_nbclust(iris, FUN = hcut, method = "wss")
+```{r lookForElbow}
+factoextra::fviz_nbclust(iris, FUN = hcut, method = "wss")
 
 ```
 
 
 
 
-### Examining different clustering methods 
+### Examining different clustering methods (performance)
 
+> test performance of "single" vs "complete" vs "average"
 
-```{r}
+> XX added other linkage options to test
+
+```{r comparingMethods}
 # Select the methods of interest
-hclust_methods <- c("single", "complete", "average")
-iris_dendlist <- dendlist()
+hclust_methods <- c("single", "complete", "average", 
+                    "ward.D", "ward.D2", "centroid",
+                    "mcquitty","median")
+iris_dendlist <- dendextend::dendlist()
 for(i in seq_along(hclust_methods)) {
-   hc_iris <- hclust(d_iris, method = hclust_methods[i])   
-   iris_dendlist <- dendlist(iris_dendlist, as.dendrogram(hc_iris))
+   hc_iris <- stats::hclust(d_iris, method = hclust_methods[i])   
+   iris_dendlist <- dendextend::dendlist(iris_dendlist,
+                                         as.dendrogram(hc_iris))
 }
 names(iris_dendlist) <- hclust_methods
 iris_dendlist
 
 
 ## Obtain coefficients and plot 
-iris_dendlist_cor <- cor.dendlist(iris_dendlist)
+iris_dendlist_cor <- dendextend::cor.dendlist(iris_dendlist)
 iris_dendlist_cor
 corrplot::corrplot(iris_dendlist_cor, "pie", "lower")
 
 
 ```
 
+> XX so they all correlate except 'complete' which suggests 'complete' is best (why?)
 
+> XX Doesn't this just show which produce the same results? YES
 
-
-
+> Also try ward.D as a linkage method?
 
 
 #### References: 

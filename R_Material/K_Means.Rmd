@@ -2,7 +2,7 @@
 title: "K_Means"
 output: html_document
 date: "2022-11-01"
-author: Nadia Kennar, UKDS
+author: "Nadia Kennar, UKDS, modified by Ben Anderson"
 ---
 
 ## Recap on K-Means 
@@ -72,7 +72,7 @@ fviz_dist(distance, gradient = list(low = "#00AFBB", mid = "white", high = "#FC4
 ```
 
 
-
+> Louise Capener: the nstart defines how many times we initialise our KMeans algorithm. So, nstart = 25 will generate 25 initial configurations. The more times we initialise our algorithm with different initialisation points, the more likely we are to find the best clustering solution. This is why setting it to a fairly high value > 10 is recommended, so we don’t end up with a suboptimal clustering solution. https://analyticslog.com/blog/2021/3/7/nstart-value-k-means-clustering-in-r-programmin 
 
 ```{r}
 ## K-Means clustering 
@@ -121,6 +121,7 @@ In the kmeans function, it is necessary to set center, which is the number of gr
 
 , but let’s see how we would build the model if we didn’t know it.
 
+> XX why start at 20?
 
 ```{r}
 set.seed(101)
@@ -142,8 +143,11 @@ clusplot(iris, irisCluster$cluster, color=T, shade=T, labels=0, lines=0)
 
 ## Evaluation:: the elblow plot method 
 
-It might not always be known the exact number of centers, especially when we have unlabelled datasets. Therefore, we can use the Elblow plot method to examine the centers we defined 
+It might not always be known the exact number of centers, especially when we have unlabelled datasets. Therefore, we can use the Elbow plot method to examine the centers we defined 
 
+> we're trying to reduce variation within the clusters
+
+> XX Can't ML automate this - inflection point?
 
 ```{r}
 tot.withinss <- vector(mode="character", length=10)
