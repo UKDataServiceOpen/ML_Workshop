@@ -1,3 +1,14 @@
+# ML-Workshop
+
+fork with some local edits & notes to self
+
+## Other useful sources:
+
+(h/t @twrushby)
+
+ * https://machinelearningmastery.com/k-fold-cross-validation/ (using Python)
+ * [Machine Learning with R: Expert techniques for predictive modeling](https://books.google.co.uk/books?id=iNuSDwAAQBAJ)
+=======
 ![ukds](./Python_Code/Images/ukds.png)<br>
 <br>
 
@@ -21,3 +32,4 @@ The following topics are covered under this training series:
 The training materials - including webinar recordings, slides, and sample Python code - can be found in the following folders:
 * [Python code](./Python_Code) - run and/or download the Python code using our Jupyter notebook resources.
 * [R code](./R_Material) - run and/or download the R code using our Jupyter notebook resources.
+
