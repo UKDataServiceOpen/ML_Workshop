@@ -214,9 +214,13 @@ factoextra::fviz_nbclust(iris, FUN = hcut, method = "wss")
 
 > test performance of "single" vs "complete" vs "average"
 
+> XX added other linkage options to test
+
 ```{r comparingMethods}
 # Select the methods of interest
-hclust_methods <- c("single", "complete", "average")
+hclust_methods <- c("single", "complete", "average", 
+                    "ward.D", "ward.D2", "centroid",
+                    "mcquitty","median")
 iris_dendlist <- dendextend::dendlist()
 for(i in seq_along(hclust_methods)) {
    hc_iris <- stats::hclust(d_iris, method = hclust_methods[i])   
@@ -237,9 +241,9 @@ corrplot::corrplot(iris_dendlist_cor, "pie", "lower")
 
 > XX so they all correlate except 'complete' which suggests 'complete' is best (why?)
 
-> XX Doesn't this just show which produce the same results?
+> XX Doesn't this just show which produce the same results? YES
 
-
+> Also try ward.D as a linkage method?
 
 
 #### References: 
