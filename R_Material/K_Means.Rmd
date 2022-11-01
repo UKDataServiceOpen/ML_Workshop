@@ -121,6 +121,7 @@ In the kmeans function, it is necessary to set center, which is the number of gr
 
 , but let’s see how we would build the model if we didn’t know it.
 
+> XX why start at 20?
 
 ```{r}
 set.seed(101)
@@ -142,8 +143,11 @@ clusplot(iris, irisCluster$cluster, color=T, shade=T, labels=0, lines=0)
 
 ## Evaluation:: the elblow plot method 
 
-It might not always be known the exact number of centers, especially when we have unlabelled datasets. Therefore, we can use the Elblow plot method to examine the centers we defined 
+It might not always be known the exact number of centers, especially when we have unlabelled datasets. Therefore, we can use the Elbow plot method to examine the centers we defined 
 
+> we're trying to reduce variation within the clusters
+
+> XX Can't ML automate this - inflection point?
 
 ```{r}
 tot.withinss <- vector(mode="character", length=10)
