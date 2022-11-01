@@ -17,9 +17,7 @@ There are two approaches:
 
 ## Install and Load Packages
 
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
 
 #install.packages("factoextra")
 #install.packages("stats")
@@ -47,13 +45,13 @@ library(colorspace)
 ```
 
 
-## Information on the packages used for clustering 
+### Information on the packages used for clustering 
 
 
 Hierarchical clustering can be performed on a data matrix using the function *hclust* from the *cluster* package
 
 
-# The Iris Dataset 
+## The Iris Dataset 
 
 The famous (Fisher’s or Anderson’s) iris data set gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are Iris setosa, versicolor, and virginica. (from ?iris)
 
@@ -72,9 +70,9 @@ is.null(iris)
 ```
 
 
-# Method 1
+## Method 1
 
-## Basic clustering 
+### Basic clustering 
 
 We will perform this on just the numeric values, these include sepal length, petal length, sepal width and petal width which can be represented using the code *[, 1;4]* which selects columns 1 - 4. 
 
@@ -86,7 +84,7 @@ hcluster
 ```
 
 
-## Visualise our clusters using a dendogram 
+### Visualise our clusters using a dendogram 
 
 ```{r}
 # Convert hclust into a dendrogram and plot
@@ -103,7 +101,7 @@ plot(hcd,  xlab = "Height", nodePar = nodePar, main = "Cluster dendrogram",
 
 
 
-# Method 2 
+## Method 2 
 
 
 ```{r}
@@ -113,7 +111,7 @@ iris2 <- iris[,-5]
 #store as a seperate dataframe 
 species <- iris[,5]
 
-
+#convert to numeric and add a colour palette
 species_col <- rev(rainbow_hcl(3))[as.numeric(species)]
 
 
@@ -121,7 +119,7 @@ species_col <- rev(rainbow_hcl(3))[as.numeric(species)]
 
 
 
-## Plot a SPLOM (Scatterplot Matrix)
+### Plot a SPLOM (Scatterplot Matrix)
 
 
 ```{r}
@@ -143,7 +141,7 @@ We can see that the Setosa species are distinctly different from Versicolor and 
 
 
 
-# Default hierachical clustering method 
+### Default hierachical clustering method 
 
 The default hierarchical clustering method in hclust is “complete”. We can visualize the result of running it by turning the object to a dendrogram and making several adjustments to the object, such as: changing the labels, coloring the labels based on the real species category, and coloring the branches based on cutting the tree into three clusters.
 
@@ -167,7 +165,7 @@ labels_colors(dend) <-
    )]
 
 
-# We shall add the flower type to the labels:
+# Add the flower type to the labels:
 labels(dend) <- paste(as.character(iris[,5])[order.dendrogram(dend)],
                            "(",labels(dend),")", 
                            sep = "")
@@ -176,12 +174,11 @@ labels(dend) <- paste(as.character(iris[,5])[order.dendrogram(dend)],
 dend <- hang.dendrogram(dend,hang_height=0.1)
 # reduce the size of the labels:
 # dend <- assign_values_to_leaves_nodePar(dend, 0.5, "lab.cex")
-dend <- set(dend, "labels_cex", 0.5)
+dend <- set(dend, "labels_cex", 0.2)
 # And plot:
 par(mar = c(3,3,3,7))
 plot(dend, 
-     main = "Clustered Iris data set
-     (the labels give the true flower species)", 
+     main = "Clustered Iris data set", 
      horiz =  TRUE,  nodePar = list(cex = .007))
 legend("topleft", legend = iris_species, fill = rainbow_hcl(3))
 ```
@@ -190,6 +187,57 @@ These visualizations easily demonstrates how the separation of the hierarchical 
 
 The hanging of the tree also helps to locate extreme observations. For example, we can see that observation “virginica (107)” is not very similar to the Versicolor species, but still, it is among them. Also, “Versicolor (71)” is located too much “within” the group of Virginica flowers.
 
+
+
+
+### Elbow plot method
+
+Similar to how we determined optimal clusters with k-means clustering, we can execute similar approaches for hierarchical clustering:
+
+Elbow Method
+To perform the elbow method we just need to change the second argument in fviz_nbclust to FUN = hcut.
+
+```{r}
+fviz_nbclust(iris, FUN = hcut, method = "wss")
+
+```
+
+
+
+
+### Examining different clustering methods 
+
+
+```{r}
+# Select the methods of interest
+hclust_methods <- c("single", "complete", "average")
+iris_dendlist <- dendlist()
+for(i in seq_along(hclust_methods)) {
+   hc_iris <- hclust(d_iris, method = hclust_methods[i])   
+   iris_dendlist <- dendlist(iris_dendlist, as.dendrogram(hc_iris))
+}
+names(iris_dendlist) <- hclust_methods
+iris_dendlist
+
+
+## Obtain coefficients and plot 
+iris_dendlist_cor <- cor.dendlist(iris_dendlist)
+iris_dendlist_cor
+corrplot::corrplot(iris_dendlist_cor, "pie", "lower")
+
+
+```
+
+
+
+
+
+
+
+#### References: 
+1) https://cran.r-project.org/web/packages/dendextend/vignettes/Cluster_Analysis.html
+2) https://cran.r-project.org/web/packages/dendextend/vignettes/Cluster_Analysis.html#iris---edgar-andersons-iris-data
+2) https://www.kaggle.com/code/anna1231/hierarchical-clustering-of-iris-species/notebook 
 
 
 
