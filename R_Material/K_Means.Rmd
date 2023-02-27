@@ -27,6 +27,7 @@ The end goal is to have K clusters in which the observations within each cluster
 
 ```{r setup, include=FALSE, echo=FALSE}
 
+# It is recommended to load these packages in the console
 #install.packages("factoextra")
 #install.packages("stats")
 #install.packages("janitor")
@@ -73,6 +74,7 @@ fviz_dist(distance, gradient = list(low = "#00AFBB", mid = "white", high = "#FC4
 
 
 
+The nstart defines how many times we initialise our KMeans algorithm. So, nstart = 25 will generate 25 initial configurations. The more times we initialise our algorithm with different initialisation points, the more likely we are to find the best clustering solution. This is why setting it to a fairly high value > 10 is recommended, so we don’t end up with a suboptimal clustering solution. https://analyticslog.com/blog/2021/3/7/nstart-value-k-means-clustering-in-r-programmin 
 
 ```{r}
 ## K-Means clustering 
@@ -122,6 +124,8 @@ In the kmeans function, it is necessary to set center, which is the number of gr
 , but let’s see how we would build the model if we didn’t know it.
 
 
+Given that 10+ initialisations tend to work best, here we will set our number of initialisations to 20. But I encourage you to play around with the number and see what results you get!
+
 ```{r}
 set.seed(101)
 irisCluster <- kmeans(iris[,1:4], center=3, nstart=20)
@@ -142,8 +146,10 @@ clusplot(iris, irisCluster$cluster, color=T, shade=T, labels=0, lines=0)
 
 ## Evaluation:: the elblow plot method 
 
-It might not always be known the exact number of centers, especially when we have unlabelled datasets. Therefore, we can use the Elblow plot method to examine the centers we defined 
 
+It might not always be known the exact number of centers, especially when we have unlabelled datasets. Therefore, we can use the Elbow plot method to examine the centers we defined.
+
+You might wonder why we have to manually identify to elbow point. Although Machine Learning can be used to automate many tasks, it is not an appropriate tool for determining the optimal number of clusters for a K-Means algorithm. The elbow method requires manual analysis of the data and the use of domain knowledge to determine the best number of clusters. The elbow method also relies on the user's intuition and insight to identify the "elbow" point in the graph that indicates the optimal number of clusters. Machine Learning algorithms cannot provide this level of analysis or insight, so the elbow method is the only reliable way to determine the optimal number of clusters.
 
 ```{r}
 tot.withinss <- vector(mode="character", length=10)

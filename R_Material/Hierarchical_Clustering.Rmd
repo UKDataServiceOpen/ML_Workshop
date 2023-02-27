@@ -18,6 +18,7 @@ There are two approaches:
 ## Install and Load Packages
 
 ```{r}
+# Install these packages in the console
 
 #install.packages("factoextra")
 #install.packages("stats")
@@ -53,7 +54,7 @@ Hierarchical clustering can be performed on a data matrix using the function *hc
 
 ## The Iris Dataset 
 
-The famous (Fisher’s or Anderson’s) iris data set gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are Iris setosa, versicolor, and virginica. (from ?iris)
+The famous (Fisher’s or Anderson’s) iris data set gives the measurements in centimeters of the variables sepal length and width and petal length and width, respectively, for 50 flowers from each of 3 species of iris. The species are Iris setosa, versicolor, and virginica. 
 
 
 ## Load and Prep the Data
@@ -104,6 +105,9 @@ plot(hcd,  xlab = "Height", nodePar = nodePar, main = "Cluster dendrogram",
 ## Method 2 
 
 
+This time we remove the categorical variable detailing the iris species, and convert it to a numerical variable, and add a colour palette.
+
+
 ```{r}
 # Remove the categorical variable 
 iris2 <- iris[,-5]
@@ -114,7 +118,7 @@ species <- iris[,5]
 #convert to numeric and add a colour palette
 species_col <- rev(rainbow_hcl(3))[as.numeric(species)]
 
-
+species_col
 ```
 
 
@@ -190,7 +194,9 @@ The hanging of the tree also helps to locate extreme observations. For example, 
 
 
 
-### Elbow plot method
+
+
+### Evaluation method: Elbow plot 
 
 Similar to how we determined optimal clusters with k-means clustering, we can execute similar approaches for hierarchical clustering:
 
@@ -208,7 +214,10 @@ fviz_nbclust(iris, FUN = hcut, method = "wss")
 ### Examining different clustering methods 
 
 
-```{r}
+Here we will test the performance of different linkage methods.
+
+
+```{r comparingMethods}
 # Select the methods of interest
 hclust_methods <- c("single", "complete", "average")
 iris_dendlist <- dendlist()
@@ -227,11 +236,15 @@ corrplot::corrplot(iris_dendlist_cor, "pie", "lower")
 
 
 ```
+From the correlation plot we can see that most clustering methods produce similar results, apart from the complete method, which has the lowest correlation or around 0.6. This is because the complete linkage method takes the maximum distance between any two points in the clusters when computing the distance between clusters, while the other methods take the average distance. Hence, the complete linkage method is more likely to produce more distinct clusters.
 
 
 
 
 
+Usually, the Ward's method of hierarchical clustering performs best for the Iris dataset in R. This is because this method minimizes the variance between clusters, meaning that it can better distinguish between small variations in the data. Additionally, the Ward's method is less sensitive to outliers and can better handle datasets with more than two dimensions.
+
+Whereas, single linkage tends to perform poorly for the Iris dataset. This is because Single linkage tends to create larger clusters and is more sensitive to outliers, which can lead to poor performance.
 
 
 #### References: 
