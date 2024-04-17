@@ -6,6 +6,6 @@ If you would like to run and/or edit the code without installing any software on
 
 Once Binder has been launched, click on the notebook you want to run. (*It might take up to 5 minutes to launch if it hasn't been run in a while*)
 
-### Launch ML Workshop (Python demo) as a Binder service: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/UKDataServiceOpen/ML_Workshop/HEAD)
+### Launch ML Workshop (Python demo) as a Binder service: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/UKDataServiceOpen/ML_Workshop/HEAD?labpath=Python_Code%2FML_Codedemo.ipynb)
 
 Alternatively, you can download the notebook files and run them on your own machine. See our guidance on installing Python and Jupyter [here](https://github.com/UKDataServiceOpen/computational-social-science/blob/master/installation.md).
