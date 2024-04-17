@@ -4,7 +4,7 @@
 
 # ML-Workshop
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/UKDataServiceOpen/ML_Workshop/HEAD)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/UKDataServiceOpen/ML_Workshop/HEAD?labpath=Python_Code%2FML_Codedemo.ipynb)
 
 What is machine learning? How is machine learning different from classic statistics? What are its applications? What type of models exist within machine learning? 
 
