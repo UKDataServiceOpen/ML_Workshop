@@ -1,9 +1,0 @@
-kneed==0.8.1
-jupyter-nbextensions-configurator==0.5.0
-matplotlib==3.3.4
-numpy==1.20.1
-pandas==1.2.4
-seaborn==0.11.1
-scikit-image==0.18.1
-scipy==1.6.2
-yellowbrick==1.5
