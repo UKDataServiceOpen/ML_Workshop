@@ -7,7 +7,6 @@ WORKDIR /app
 # Copy requirements.txt into the container
 COPY requirements.txt .
 
-
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -21,7 +20,15 @@ COPY . .
 EXPOSE 8888
 
 # Set the default command to run Jupyter Notebook
-CMD ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.notebook_dir=/app --ServerApp.base_url=/binder/jupyter > /app/jupyter.log 2>&1"]
-
+CMD ["jupyter", "notebook", 
+     "--ip=0.0.0.0", 
+     "--port=8888", 
+     "--no-browser", 
+     "--allow-root", 
+     "--NotebookApp.token=", 
+     "--NotebookApp.password=", 
+     "--NotebookApp.notebook_dir=/app", 
+     "--ServerApp.base_url=/binder/jupyter", 
+     "--NotebookApp.shutdown_no_activity_timeout=3600"]
 
 
