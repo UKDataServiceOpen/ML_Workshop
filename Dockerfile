@@ -20,15 +20,7 @@ COPY . .
 EXPOSE 8888
 
 # Set the default command to run Jupyter Notebook
-CMD ["jupyter", "notebook", 
-     "--ip=0.0.0.0", 
-     "--port=8888", 
-     "--no-browser", 
-     "--allow-root", 
-     "--NotebookApp.token=", 
-     "--NotebookApp.password=", 
-     "--NotebookApp.notebook_dir=/app", 
-     "--ServerApp.base_url=/binder/jupyter", 
-     "--NotebookApp.shutdown_no_activity_timeout=3600"]
+# Set the default command to run Jupyter Notebook
+CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.notebook_dir=/app", "--ServerApp.base_url=/binder/jupyter", "--NotebookApp.shutdown_no_activity_timeout=3600"]
 
 
