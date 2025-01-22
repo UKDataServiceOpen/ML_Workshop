@@ -1,5 +1,5 @@
 # Use Jupyter's base image for compatibility with MyBinder
-FROM python-3.10.11-slim
+FROM python:3.10.11-slim
 
 
 # Copy requirements.txt into the container
